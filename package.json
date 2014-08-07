@@ -1,0 +1,17 @@
+{
+  "name": "realgeeks-hubot-scripts",
+  "version": "1.0.00",
+
+  "author": "kevin1024",
+
+  "description": "Amazing, mission-critical scripts for Real Geeks development",
+  "main": "index.coffee",
+
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/RealGeeks/realgeeks-hubot-scripts.git"
+  },
+
+  "dependencies": {
+  }
+}
