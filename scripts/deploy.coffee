@@ -37,6 +37,6 @@ module.exports = (robot) ->
       {task: "web.deploy", args: [], kwargs: {}}
     ])
     .then (data) ->
-      msg.send("Project #{project} successfully deployed")
+      msg.send("Project #{project} successfully deployed.  View logs: #{data['output']}")
     ,(err) ->
       msg.send("Error deploying #{project}: #{err}")
