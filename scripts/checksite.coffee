@@ -16,6 +16,49 @@
 RACKSPACE_DNS_SERVER = '69.20.95.4'
 ANOTHER_DNS_SERVER = '8.8.8.8'
 
+OUR_IP_ADDRESSES = [
+    '67.192.203.35',
+    '98.129.53.0',
+    '67.192.111.55',
+    '67.192.203.36',
+    '98.129.51.162',
+    '72.32.55.73',
+    '72.32.189.255',
+    '98.129.51.166',
+    '98.129.11.123',
+    '67.192.111.53',
+    '67.192.111.54',
+    '98.129.53.1',
+    '98.129.6.190',
+    '98.129.11.121',
+    '72.32.55.74',
+    '74.205.36.225',
+    '98.129.11.122',
+    '98.129.11.127',
+    '67.192.111.51',
+    '72.32.55.75',
+    '67.192.111.56',
+    '67.192.111.57',
+    '98.129.53.6',
+    '98.129.53.4',
+    '98.129.11.125',
+    '98.129.11.124',
+    '72.32.55.76',
+    '72.32.189.254',
+    '67.192.111.52',
+    '72.32.55.72',
+    '72.32.55.77',
+    '98.129.53.5',
+    '98.129.11.126',
+    '67.192.111.49',
+    '72.32.55.79',
+    '67.192.111.48',
+    '72.32.55.78',
+    '98.129.6.189',
+    '67.192.111.58',
+    '98.129.6.184'
+]
+
 dns = require("native-dns")
 async = require("async")
 
@@ -44,7 +87,8 @@ dnsQuery = (server, domain, record, cb) ->
   req.send()
 
 getNameservers = (domain, cb) ->
-  dnsQuery ANOTHER_DNS_SERVER, domain, "NS", cb
+  dnsQuery ANOTHER_DNS_SERVER, domain, "NS", (data) ->
+    cb (d.data for d in data)
 
 getMXRecords = (domain, cb) ->
   dnsQuery RACKSPACE_DNS_SERVER, domain, "MX", (data) ->
@@ -93,8 +137,10 @@ module.exports = (robot) ->
         msg.send "Their nameservers are pointing at Rackspace"
       else
         msg.send "They have not changed their nameservers to point to rackspace"
-      if data.ip.length
+      if data.ip.length and data.ip[0] in OUR_IP_ADDRESSES
         msg.send "Their IP address resolves on our nameservers.  All good! #{JSON.stringify(data.ip)}"
+      else if data.ip.length and data.ip[0] not in OUR_IP_ADDRESSES
+        msg.send "Their IP adddress resolves on our nameservers, but points to another IP.  We need to contact Rackspace and get them to move the domain to our control panel."
       else
         msg.send "Uh oh, their IP address does not resolve on our nameservers.  Try to syncdns."
       if data.mx.length
