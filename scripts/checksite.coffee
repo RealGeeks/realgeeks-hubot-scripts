@@ -138,7 +138,7 @@ module.exports = (robot) ->
       else
         msg.send "They have not changed their nameservers to point to rackspace"
       if data.ip.length and data.ip[0] in OUR_IP_ADDRESSES
-        msg.send "Their IP address resolves on our nameservers.  All good! #{JSON.stringify(data.ip)}"
+        msg.send "Their IP address resolves on our nameservers and points to one of our servers."
       else if data.ip.length and data.ip[0] not in OUR_IP_ADDRESSES
         msg.send "Their IP adddress resolves on our nameservers, but points to another IP.  We need to contact Rackspace and get them to move the domain to our control panel."
       else
