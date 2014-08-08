@@ -1,56 +1,58 @@
+# Description:
+#   Check a website to make sure it's dns is all good
+#
+# Dependencies:
+#   native-dns
+#   scyn
+#
+# Configuration:
+#
+# Commands:
+#   check site <domain> - Check the site's DNS configuration
+#
+# Author:
+#   kevin1024
+#
+RACKSPACE_DNS_SERVER = '69.20.95.4'
+ANOTHER_DNS_SERVER = '8.8.8.8'
+
 dns = require("native-dns")
 async = require("async")
-getNameservers = (domain, cb) ->
+
+dnsQuery = (server, domain, record, cb) ->
+  data = []
   question = dns.Question(
     name: domain
-    type: "NS"
+    type: record
   )
   req = dns.Request(
     question: question
     server:
-      address: "8.8.8.8"
+      address: server
       port: 53
       type: "udp"
 
     timeout: 1000
   )
-  data = []
 
   req.on "message", (err, answer) ->
-    answer.answer.forEach (a) ->
-      data.push a.data
-
+    data = answer.answer
 
   req.on "end", ->
     cb data
 
   req.send()
+
+getNameservers = (domain, cb) ->
+  dnsQuery ANOTHER_DNS_SERVER, domain, "NS", cb
+
+getMXRecords = (domain, cb) ->
+  dnsQuery RACKSPACE_DNS_SERVER, domain, "MX", (data) ->
+    cb (d.exchange for d in data)
 
 resolveIp = (domain, cb) ->
-  question = dns.Question(
-    name: domain
-    type: "A"
-  )
-  req = dns.Request(
-    question: question
-    server:
-      address: "69.20.95.4"
-      port: 53
-      type: "udp"
-
-    timeout: 1000
-  )
-
-  data = []
-
-  req.on "message", (err, answer) ->
-    return  unless answer.answer[0]
-    data.push answer.answer[0].address
-
-  req.on "end", ->
-    cb data
-
-  req.send()
+  dnsQuery RACKSPACE_DNS_SERVER, domain, "A", (data) ->
+    cb (d.address for d in data)
 
 checkDomain = (domain, callback) ->
   async.parallel [
@@ -62,15 +64,28 @@ checkDomain = (domain, callback) ->
       resolveIp domain, (data) ->
         cb null, data
 
+    (cb) ->
+      getMXRecords domain, (data) ->
+        cb null, data
+
   ], (err, results) ->
     callback
       nameservers: results[0],
       ip: results[1]
+      mx: results[2]
 
 module.exports = (robot) ->
   robot.hear /(check)( site)? (.*)/i, (msg) ->
     domain   = msg.match[3]
     langs = ["en"]
+
+    if domain.indexOf('www.') == 0
+        msg.send("please just send the domain name without the www")
+        return
+
+    if domain.indexOf('http') == 0
+        msg.send("Please just send the domain namee without the http and www")
+        return
 
     msg.send("OK, I'll check " + domain + " for you")
     checkDomain domain, (data) ->
@@ -82,3 +97,5 @@ module.exports = (robot) ->
         msg.send "Their IP address resolves on our nameservers.  All good! #{JSON.stringify(data.ip)}"
       else
         msg.send "Uh oh, their IP address does not resolve on our nameservers.  Try to syncdns."
+      if data.mx.length
+        msg.send "Their MX records on our servers  are: #{JSON.stringify(data.mx)}"
