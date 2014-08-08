@@ -120,7 +120,7 @@ checkDomain = (domain, callback) ->
 
 module.exports = (robot) ->
   robot.hear /(check)( site)? (.*)/i, (msg) ->
-    domain   = msg.match[3]
+    domain = msg.match[3].trim()
     langs = ["en"]
 
     if domain.indexOf('www.') == 0
