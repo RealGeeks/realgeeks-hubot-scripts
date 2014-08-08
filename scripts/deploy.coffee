@@ -16,27 +16,35 @@
 #   kevin1024
 #
 
+ENVS = [
+  'staging',
+  'production'
+]
+
+
 env = process.env
 FabricRemote = require('fabric-remote')
 
 fr = new FabricRemote(env.FABRIC_REMOTE_SERVER, env.FABRIC_REMOTE_PORT, env.FABRIC_REMOTE_PASS)
 
 module.exports = (robot) ->
-  robot.respond /(deploy)?( me)? (.*)/i, (msg) ->
-    project  = msg.match[3].trim()
+  robot.respond /(?:deploy) (.*)(?: to (.*))/i, (msg) ->
+    project  = msg.match[1].trim()
+    environment  = msg.match[2].trim()
     langs = ["en"]
 
-    if project != 'web'
-        msg.send("I only know how to deploy web")
-        return
+    if environment not in ENVS
+        msg.send("Sorry, I've never heard of the #{environment} environment")
 
-    msg.send("OK, I'm deploying #{project}")
+    msg.send("OK, I'm deploying #{project} to #{environment}")
 
     execution = fr.execute([
-      {task: "production", args: [], kwargs: {}},
-      {task: "web.deploy", args: [], kwargs: {}}
+      {task: environment, args: [], kwargs: {}},
+      {task: "#{project}.deploy", args: [], kwargs: {}}
     ])
     .then (data) ->
-      msg.send("Project #{project} successfully deployed.  View logs: http://#{env.FABRIC_REMOTE_SERVER}:#{env.FABRIC_REMOTE_PORT}/#{data['output']}")
+      console.log(JSON.stringify(data))
+      log_url = "http://admin:#{env.FABRIC_REMOTE_PASS}@#{env.FABRIC_REMOTE_SERVER}:#{env.FABRIC_REMOTE_PORT}#{data['output']}"
+      msg.send("Project #{project} successfully deployed.  View logs: #{log_url}")
     ,(err) ->
-      msg.send("Error deploying #{project}: #{err}")
+      msg.send("Error deploying #{project}: #{err}. View logs: #{log_url}")
