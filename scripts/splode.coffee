@@ -1,8 +1,8 @@
 # Description:
-#   Beagle bombs!
+#  Image splode
 #
 # Commands:
-#   beagle bomb <n>
+#   splode <query|beagle puppy> <n>
 
 Array::shuffle = -> @sort -> 0.5 - Math.random()
 
