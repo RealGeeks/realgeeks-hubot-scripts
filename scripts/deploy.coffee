@@ -45,8 +45,8 @@ module.exports = (robot) ->
     .then (data) ->
       log_url = "http://admin:#{env.FABRIC_REMOTE_PASS}@#{env.FABRIC_REMOTE_SERVER}:#{env.FABRIC_REMOTE_PORT}#{data['output']}"
       if data.error
-        msg.send("Error deploying #{project} to #{environment}: #{data.error}. View logs: #{log_url}")
+        msg.reply("Error deploying #{project} to #{environment}: #{data.error}. View logs: #{log_url}")
         return
-      msg.send("Project #{project} successfully deployed.  View logs: #{log_url}")
+      msg.reply("Project #{project} successfully deployed.  View logs: #{log_url}")
     ,(err) ->
-      msg.send("Error deploying #{project}: #{err}. View logs: #{log_url}")
+      msg.reply("Error deploying #{project}: #{err}. View logs: #{log_url}")
