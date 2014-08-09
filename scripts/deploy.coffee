@@ -43,8 +43,10 @@ module.exports = (robot) ->
       {task: "#{project}.deploy", args: [], kwargs: {}}
     ])
     .then (data) ->
-      console.log(JSON.stringify(data))
       log_url = "http://admin:#{env.FABRIC_REMOTE_PASS}@#{env.FABRIC_REMOTE_SERVER}:#{env.FABRIC_REMOTE_PORT}#{data['output']}"
+      if data.error
+        msg.send("Error deploying #{project} for production: #{data.error}. View logs: #{log_url}")
+        return
       msg.send("Project #{project} successfully deployed.  View logs: #{log_url}")
     ,(err) ->
       msg.send("Error deploying #{project}: #{err}. View logs: #{log_url}")
