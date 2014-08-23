@@ -35,6 +35,7 @@ module.exports = (robot) ->
 
     if environment not in ENVS
         msg.send("Sorry, I've never heard of the #{environment} environment")
+        return
 
     msg.send("OK, I'm deploying #{project} to #{environment}")
 
