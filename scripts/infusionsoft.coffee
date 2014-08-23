@@ -20,7 +20,7 @@ env = process.env
 infusionsoft = new api.DataContext(env.INFUSIONSOFT_NAME, env.INFUSIONSOFT_API_KEY)
 
 module.exports = (robot) ->
-  robot.respond /delete (.*\@.*\..*) from infusionsoft(?:.*)/i, (msg) ->
+  robot.respond /delete\s+(.*\@.*\..*)\s+from (?:infusionsoft|ifs)(?:.*)/i, (msg) ->
     email = msg.match[1].trim()
     infusionsoft.Contacts
       .where(Contact.Email, email)
