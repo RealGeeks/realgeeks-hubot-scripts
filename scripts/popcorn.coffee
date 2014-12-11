@@ -16,5 +16,5 @@
 env = process.env
 
 module.exports = (robot) ->
-  robot.respond /is.*popcorn.*/ ->
+  robot.respond /is.*popcorn.*/, (msg) ->
     msg.reply('No')
