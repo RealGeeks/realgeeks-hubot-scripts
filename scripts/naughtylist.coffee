@@ -19,5 +19,5 @@ module.exports = (robot) ->
         msg.reply("Error updating list")
         return
       msg.reply("List has been updated")
-      ,(err) ->
-        msg.reply("Error updating: #{err}. View logs: #{log_url}")
+    ,(err) ->
+      msg.reply("Error updating: #{err}. View logs: #{log_url}")
