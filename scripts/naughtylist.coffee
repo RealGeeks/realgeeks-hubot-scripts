@@ -13,7 +13,7 @@ module.exports = (robot) ->
       {task: environment, args: [], kwargs: {}},
       {task: "accounts.update_delinquents", args: [], kwargs: {}}
     ])
-    .then(data) ->
+    .then (data) ->
       log_url = "http://admin:#{env.FABRIC_REMOTE_PASS}@#{env.FABRIC_REMOTE_SERVER}:#{env.FABRIC_REMOTE_PORT}#{data['output']}"
       if data.error
         msg.reply("Error updating list")
