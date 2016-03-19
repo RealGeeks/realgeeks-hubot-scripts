@@ -1,3 +1,20 @@
+# Description:
+#   Refreshes the delinquent list on accounts
+#
+# Dependencies:
+#   fabric-remote
+#
+# Configuration:
+#   FABRIC_REMOTE_SERVER - Hostname of the fabric remote server
+#   FABRIC_REMOTE_PORT - Port of the fabric remote server
+#   FABRIC_REMOTE_PASS - Password of the fabric remote server
+#
+# Commands:
+#   (refresh|update) (naughty|delinquent) * - Refresh the delinquent list on accounts
+#
+# Author:
+#   andrewhj-mn
+#
 env = process.env
 FabricRemote = require('fabric-remote')
 
