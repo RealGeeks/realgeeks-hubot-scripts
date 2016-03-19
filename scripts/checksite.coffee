@@ -61,6 +61,7 @@ OUR_IP_ADDRESSES = [
 
 dns = require("native-dns")
 async = require("async")
+url = require("url")
 
 dnsQuery = (server, domain, record, cb) ->
   data = []
