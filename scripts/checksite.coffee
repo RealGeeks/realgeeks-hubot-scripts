@@ -123,13 +123,8 @@ module.exports = (robot) ->
     domain = msg.match[2].trim()
     langs = ["en"]
 
-    if domain.indexOf('www.') == 0
-        msg.send("please just send the domain name without the www")
-        return
-
     if domain.indexOf('http') == 0
-        msg.send("Please just send the domain namee without the http and www")
-        return
+        domain = url.parse(domain).hostname
 
     msg.send("OK, I'll check " + domain + " for you")
     checkDomain domain, (data) ->
