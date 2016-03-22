@@ -18,7 +18,8 @@
 
 ENVS = [
   'staging',
-  'production'
+  'production',
+  'beta'
 ]
 
 
