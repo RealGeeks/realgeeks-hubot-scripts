@@ -40,7 +40,7 @@ module.exports = (robot) ->
         return
 
     if project == 'web' and environment == 'production'
-       msg = msg.replace('deploy','mdeploy')
+       msg.txt = msg.txt.replace('deploy','mdeploy')
        receiveOrg.bind(robot)(msg)
        return
 
