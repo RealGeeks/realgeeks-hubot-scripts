@@ -40,7 +40,8 @@ module.exports = (robot) ->
         return
 
     if project == 'web' and environment == 'production'
-       receiveOrg.bind(robot)('mdeploy web to production')
+       msg = msg.replace('deploy','mdeploy')
+       receiveOrg.bind(robot)(msg)
        return
 
     msg.send("OK, I'm deploying #{project} to #{environment}")
