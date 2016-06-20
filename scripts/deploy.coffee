@@ -40,9 +40,8 @@ module.exports = (robot) ->
         return
 
     if project == 'web' and environment == 'production'
-       msg.text = msg.text.replace('deploy','mdeploy')
-       receiveOrg.bind(robot)(msg)
-       return
+        msg.send(":spindog: I'm temporarily changing stuff up for a few days.  To deploy, use geekbot mdeploy web to production - the m is silent")
+        return
 
     msg.send("OK, I'm deploying #{project} to #{environment}")
 
