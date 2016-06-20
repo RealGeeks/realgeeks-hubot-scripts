@@ -29,6 +29,7 @@ FabricRemote = require('fabric-remote')
 fr = new FabricRemote(env.FABRIC_REMOTE_SERVER, env.FABRIC_REMOTE_PORT, env.FABRIC_REMOTE_PASS)
 
 module.exports = (robot) ->
+  receiveOrg = robot.receive
   robot.respond /(?:deploy) (.*)(?: to (.*))/i, (msg) ->
     project  = msg.match[1].trim()
     environment  = msg.match[2].trim()
@@ -37,6 +38,10 @@ module.exports = (robot) ->
     if environment not in ENVS
         msg.send("Sorry, I've never heard of the #{environment} environment")
         return
+
+    if project == 'web' and environment == 'production'
+       receiveOrg.bind(robot)('mdeploy web to production')
+       return
 
     msg.send("OK, I'm deploying #{project} to #{environment}")
 
